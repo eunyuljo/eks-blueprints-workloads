@@ -17,5 +17,5 @@ spec:
   blueprint: 'terraform' # cdk | terraform
   karpenterInstanceProfile:
   ingress:
-    type: 'alb' # nginx | alb
+    type: 'nginx-tls' # nginx | alb
     host: # empty or your domain like dev.example.com
