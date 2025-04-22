@@ -18,8 +18,9 @@ spec:
   env: "${env}"
   
   ingress:
-    type: "nginx"
-    host: "${host}"
+    type: "nginx-tls"
+    className: "nginx-tls"
+    domain: "${host}"
     
 service:
   name: eyjo-service
