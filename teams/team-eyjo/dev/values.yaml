@@ -5,6 +5,7 @@ labels:
   team: eyjo
   app: eyjo-app
   environment: dev
+  env: "${env}"
 
 spec:
   destination:
@@ -18,9 +19,12 @@ spec:
   env: "${env}"
   
   ingress:
-    type: "nginx-tls"
+    type: "nginx"
     className: "nginx-tls"
-    domain: "${host}"
+    host: "${host}"
+    route53_weight: "${route53_weight}"
+  
+  karpenterInstanceProfile: "${karpenterInstanceProfile}"
     
 service:
   name: eyjo-service

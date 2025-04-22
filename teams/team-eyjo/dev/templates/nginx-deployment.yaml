@@ -1,33 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.deployment.name }}
+  name: nginx
   namespace: team-eyjo
   labels:
+    app: nginx
     {{- toYaml .Values.labels | nindent 4 }}
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+  replicas: 1
   revisionHistoryLimit: 3
   selector:
     matchLabels:
-      app: eyjo-app
+      app: nginx
   template:
     metadata:
       labels:
-        app: eyjo-app
+        app: nginx
         {{- toYaml .Values.labels | nindent 8 }}
     spec:
       containers:
-      - name: eyjo-container
-        image: {{ .Values.deployment.image }}
-        imagePullPolicy: Always
-        env:
-        - name: CLUSTER_NAME
-          value: {{ .Values.spec.clusterName }}
-        ports:
-        - containerPort: {{ .Values.deployment.containerPort }}
-        resources:
-          {{- toYaml .Values.deployment.resources | nindent 10 }}
+        - name: nginx
+          image: nginx:1.14.2
+          ports:
+            - containerPort: 80
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 50Mi
       {{ if .Values.spec.karpenterInstanceProfile }}
       nodeSelector:
         team: eyjo
