@@ -15,7 +15,6 @@ spec:
     metadata:
       labels:
         app: eyjo-app
-        {{- toYaml .Values.labels | nindent 8 }}
     spec:
       containers:
       - name: eyjo-container

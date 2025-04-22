@@ -16,7 +16,6 @@ spec:
     metadata:
       labels:
         app: nginx
-        {{- toYaml .Values.labels | nindent 8 }}
     spec:
       containers:
         - name: nginx
