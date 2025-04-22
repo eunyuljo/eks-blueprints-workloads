@@ -1,0 +1,61 @@
+# teams/team-eyjo/dev/values.yaml
+# 기본 애플리케이션 구성 값
+applicationName: eyjo-app
+namespace: team-eyjo
+replicas: 2
+
+# 컨테이너 이미지 설정
+image:
+  repository: nginx
+  tag: "1.21.0"
+  pullPolicy: Always
+
+# 리소스 요청 및 제한
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# 서비스 구성
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+# Nginx Ingress 구성
+ingress:
+  enabled: true
+  className: "nginx-tls"
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  host: "eyjo.example-mzc.com"
+  paths:
+    - path: /eyjo(/|$)(.*)
+      pathType: Prefix
+
+# 환경 변수
+env:
+  - name: ENV
+    value: "dev"
+  - name: SERVICE_PORT
+    value: "8080"
+
+# ConfigMap 데이터
+configMap:
+  enabled: true
+  data:
+    app-config.json: |
+      {
+        "apiUrl": "http://api-service:8080",
+        "logLevel": "info",
+        "env": "dev"
+      }
+
+# AWS 특정 설정
+aws:
+  region: ap-northeast-2

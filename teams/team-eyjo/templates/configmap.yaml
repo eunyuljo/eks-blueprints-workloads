@@ -1,0 +1,13 @@
+# teams/team-eyjo/dev/templates/configmap.yaml
+{{- if .Values.configMap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.applicationName }}-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.applicationName }}
+    env: {{ .Values.spec.env }}
+data:
+  {{- toYaml .Values.configMap.data | nindent 2 }}
+{{- end }}
