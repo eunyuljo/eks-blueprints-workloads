@@ -1,13 +1,22 @@
 # teams/team-eyjo/dev/templates/configmap.yaml
-{{- if .Values.configMap.enabled }}
+{{- if and .Values.configMap (or (not (hasKey .Values.configMap "enabled")) .Values.configMap.enabled) }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.applicationName }}-config
-  namespace: {{ .Values.namespace }}
+  name: {{ .Values.applicationName | default "eyjo-app" }}-config
+  namespace: {{ .Values.namespace | default "team-eyjo" }}
   labels:
-    app: {{ .Values.applicationName }}
-    env: {{ .Values.spec.env }}
+    app: {{ .Values.applicationName | default "eyjo-app" }}
+    env: {{ .Values.spec.env | default "workspace1" }}
 data:
+  {{- if .Values.configMap.data }}
   {{- toYaml .Values.configMap.data | nindent 2 }}
+  {{- else }}
+  app-config.json: |
+    {
+      "apiUrl": "http://api-service:8080",
+      "logLevel": "info",
+      "env": "dev"
+    }
+  {{- end }}
 {{- end }}

@@ -2,6 +2,8 @@
 # 기본 애플리케이션 구성 값
 applicationName: eyjo-app
 namespace: team-eyjo
+
+# 레플리카 설정
 replicas: 2
 
 # 컨테이너 이미지 설정
@@ -28,7 +30,7 @@ service:
 # Nginx Ingress 구성
 ingress:
   enabled: true
-  className: "nginx-tls"
+  className: "nginx"
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/use-regex: "true"
@@ -59,3 +61,14 @@ configMap:
 # AWS 특정 설정
 aws:
   region: ap-northeast-2
+
+# 기본 spec 정보 - Helm 템플릿에서 값이 주입되지 않을 경우를 대비
+spec:
+  env: workspace1
+  blueprint: terraform
+  clusterName: ex-workspace1
+  source:
+    repoURL: https://github.com/eunyuljo/eks-blueprints-workloads
+    targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc

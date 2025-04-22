@@ -2,17 +2,17 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.applicationName }}
-  namespace: {{ .Values.namespace }}
+  name: {{ .Values.applicationName | default "eyjo-app" }}
+  namespace: {{ .Values.namespace | default "team-eyjo" }}
   labels:
-    app: {{ .Values.applicationName }}
-    env: {{ .Values.spec.env }}
+    app: {{ .Values.applicationName | default "eyjo-app" }}
+    env: {{ .Values.spec.env | default "workspace1" }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.service.type | default "ClusterIP" }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: {{ .Values.service.targetPort }}
+    - port: {{ .Values.service.port | default 80 }}
+      targetPort: {{ .Values.service.targetPort | default 8080 }}
       protocol: TCP
       name: http
   selector:
-    app: {{ .Values.applicationName }}
+    app: {{ .Values.applicationName | default "eyjo-app" }}

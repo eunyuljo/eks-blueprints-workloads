@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: {{ .Values.namespace }}
+  name: {{ .Values.namespace | default "team-eyjo" }}
   labels:
-    name: {{ .Values.namespace }}
-    env: {{ .Values.spec.env }}
+    name: {{ .Values.namespace | default "team-eyjo" }}
+    env: {{ .Values.spec.env | default "workspace1" }}
