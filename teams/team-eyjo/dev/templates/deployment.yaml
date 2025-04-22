@@ -1,61 +1,25 @@
-# teams/team-eyjo/dev/templates/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.applicationName | default "eyjo-app" }}
-  namespace: {{ .Values.namespace | default "team-eyjo" }}
+  name: {{ .Values.deployment.name }}
+  namespace: team-eyjo
   labels:
-    app: {{ .Values.applicationName | default "eyjo-app" }}
-    env: {{ .Values.spec.env | default "workspace1" }}
+    {{- toYaml .Values.labels | nindent 4 }}
 spec:
-  replicas: {{ .Values.replicas | default 2 }}
+  replicas: {{ .Values.deployment.replicas }}
   selector:
     matchLabels:
-      app: {{ .Values.applicationName | default "eyjo-app" }}
+      app: eyjo-app
   template:
     metadata:
       labels:
-        app: {{ .Values.applicationName | default "eyjo-app" }}
-        env: {{ .Values.spec.env | default "workspace1" }}
+        app: eyjo-app
+        {{- toYaml .Values.labels | nindent 8 }}
     spec:
       containers:
-      - name: {{ .Values.applicationName | default "eyjo-app" }}
-        image: "{{ .Values.image.repository | default "nginx" }}:{{ .Values.image.tag | default "1.21.0" }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
+      - name: eyjo-container
+        image: {{ .Values.deployment.image }}
         ports:
-        - containerPort: 8080
-          name: http
+        - containerPort: {{ .Values.deployment.containerPort }}
         resources:
-        {{- if .Values.resources }}
-          {{- toYaml .Values.resources | nindent 12 }}
-        {{- else }}
-          requests:
-            cpu: 100m
-            memory: 128Mi
-          limits:
-            cpu: 200m
-            memory: 256Mi
-        {{- end }}
-        env:
-        {{- if .Values.env }}
-        {{- range .Values.env }}
-        - name: {{ .name }}
-          value: "{{ .value }}"
-        {{- end }}
-        {{- else }}
-        - name: ENV
-          value: "dev"
-        - name: SERVICE_PORT
-          value: "8080"
-        {{- end }}
-        {{- if .Values.configMap.enabled }}
-        volumeMounts:
-        - name: config-volume
-          mountPath: /app/config
-        {{- end }}
-      {{- if .Values.configMap.enabled }}
-      volumes:
-      - name: config-volume
-        configMap:
-          name: {{ .Values.applicationName | default "eyjo-app" }}-config
-      {{- end }}
+          {{- toYaml .Values.deployment.resources | nindent 10 }}

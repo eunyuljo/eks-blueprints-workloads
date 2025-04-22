@@ -1,8 +1,0 @@
-# teams/team-eyjo/dev/templates/namespace.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: {{ .Values.namespace | default "team-eyjo" }}
-  labels:
-    name: {{ .Values.namespace | default "team-eyjo" }}
-    env: {{ .Values.spec.env | default "workspace1" }}

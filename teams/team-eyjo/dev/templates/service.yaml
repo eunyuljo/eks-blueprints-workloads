@@ -1,18 +1,14 @@
-# teams/team-eyjo/dev/templates/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.applicationName | default "eyjo-app" }}
-  namespace: {{ .Values.namespace | default "team-eyjo" }}
+  name: {{ .Values.service.name }}
+  namespace: team-eyjo
   labels:
-    app: {{ .Values.applicationName | default "eyjo-app" }}
-    env: {{ .Values.spec.env | default "workspace1" }}
+    {{- toYaml .Values.labels | nindent 4 }}
 spec:
-  type: {{ .Values.service.type | default "ClusterIP" }}
-  ports:
-    - port: {{ .Values.service.port | default 80 }}
-      targetPort: {{ .Values.service.targetPort | default 8080 }}
-      protocol: TCP
-      name: http
   selector:
-    app: {{ .Values.applicationName | default "eyjo-app" }}
+    app: eyjo-app
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+  type: ClusterIP

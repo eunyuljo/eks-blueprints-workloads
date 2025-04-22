@@ -1,74 +1,45 @@
-# teams/team-eyjo/dev/values.yaml
-# 기본 애플리케이션 구성 값
-applicationName: eyjo-app
-namespace: team-eyjo
+argoNamespace: argocd
+argoProject: default
 
-# 레플리카 설정
-replicas: 2
+labels:
+  team: eyjo
+  app: eyjo-app
+  environment: dev
 
-# 컨테이너 이미지 설정
-image:
-  repository: nginx
-  tag: "1.21.0"
-  pullPolicy: Always
-
-# 리소스 요청 및 제한
-resources:
-  requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 200m
-    memory: 256Mi
-
-# 서비스 구성
+spec:
+  destination:
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: "${repoUrl}"
+    targetRevision: "${targetRevision}"
+  
+  blueprint: service
+  clusterName: "${clusterName}"
+  env: "${env}"
+  
+  ingress:
+    type: "nginx"
+    host: "${host}"
+    
 service:
-  type: ClusterIP
+  name: eyjo-service
   port: 80
   targetPort: 8080
 
-# Nginx Ingress 구성
+deployment:
+  name: eyjo-deployment
+  replicas: 2
+  image: nginx:latest
+  containerPort: 8080
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "100m"
+    limits:
+      memory: "128Mi"
+      cpu: "200m"
+
 ingress:
-  enabled: true
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
-  host: "eyjo.example-mzc.com"
-  paths:
-    - path: /eyjo(/|$)(.*)
-      pathType: Prefix
-
-# 환경 변수
-env:
-  - name: ENV
-    value: "dev"
-  - name: SERVICE_PORT
-    value: "8080"
-
-# ConfigMap 데이터
-configMap:
-  enabled: true
-  data:
-    app-config.json: |
-      {
-        "apiUrl": "http://api-service:8080",
-        "logLevel": "info",
-        "env": "dev"
-      }
-
-# AWS 특정 설정
-aws:
-  region: ap-northeast-2
-
-# 기본 spec 정보 - Helm 템플릿에서 값이 주입되지 않을 경우를 대비
-spec:
-  env: workspace1
-  blueprint: terraform
-  clusterName: ex-workspace1
-  source:
-    repoURL: https://github.com/eunyuljo/eks-blueprints-workloads
-    targetRevision: main
-  destination:
-    server: https://kubernetes.default.svc
+  name: eyjo-ingress
+  path: /eyjo
+  pathType: Prefix
