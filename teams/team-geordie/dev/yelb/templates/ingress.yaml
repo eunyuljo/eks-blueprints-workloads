@@ -30,7 +30,7 @@ metadata:
     app: yelb-ui
 spec:
 {{ if eq .Values.spec.ingress.type "nginx" }}
-  ingressClassName: nginx-tls
+  ingressClassName: nginx
 {{ else }}
   ingressClassName: alb
 {{ end }}
