@@ -29,12 +29,3 @@ spec:
             requests:
               cpu: 250m
               memory: 50Mi
-      {{ if .Values.spec.karpenterInstanceProfile }}
-      nodeSelector:
-        team: eyjo
-        type: karpenter
-      tolerations:
-        - key: 'eyjo'
-          operator: 'Exists'
-          effect: 'NoSchedule'
-      {{ end }}
