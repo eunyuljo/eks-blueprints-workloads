@@ -7,7 +7,7 @@ metadata:
     app: nginx
     {{- toYaml .Values.labels | nindent 4 }}
 spec:
-  replicas: 1
+  replicas: 30
   revisionHistoryLimit: 3
   selector:
     matchLabels:
@@ -29,3 +29,12 @@ spec:
             requests:
               cpu: 250m
               memory: 50Mi
+      {{ if .Values.spec.karpenterInstanceProfile }}
+      nodeSelector:
+        team: eyjo
+        type: karpenter
+      tolerations:
+        - key: 'eyjo'
+          operator: 'Exists'
+          effect: 'NoSchedule'
+      {{ end }}
