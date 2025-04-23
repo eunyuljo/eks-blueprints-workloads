@@ -27,12 +27,3 @@ spec:
         - containerPort: {{ .Values.deployment.containerPort }}
         resources:
           {{- toYaml .Values.deployment.resources | nindent 10 }}
-      {{ if .Values.spec.karpenterInstanceProfile }}
-      nodeSelector:
-        team: eyjo
-        type: karpenter
-      tolerations:
-        - key: 'eyjo'
-          operator: 'Exists'
-          effect: 'NoSchedule'
-      {{ end }}
